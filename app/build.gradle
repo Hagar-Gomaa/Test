@@ -1,0 +1,102 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'com.google.dagger.hilt.android'
+    id 'androidx.navigation.safeargs.kotlin'
+
+}
+
+android {
+    namespace 'com.example.testapp'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.testapp"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures(){
+        dataBinding = true
+    }
+}
+
+dependencies {
+    def retrofit = '2.9.0'
+    def coroutineVersion = '1.7.1'
+
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation "androidx.activity:activity-ktx:1.7.2"
+// retrofit dependency
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit"
+
+// coroutines dependency
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
+
+//  hilt dependency
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+
+    // room
+    implementation("androidx.room:room-runtime:2.5.1")
+    kapt("androidx.room:room-compiler:2.5.1")
+    implementation("androidx.room:room-ktx:2.5.1")
+
+    /// navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+
+// okHttp dependency
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11"
+
+// glide dependency
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+
+// liveData dependency
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+    implementation "androidx.activity:activity-ktx:1.7.2"
+    implementation "androidx.fragment:fragment-ktx:1.6.0"
+
+// lottie dependency
+    implementation 'com.airbnb.android:lottie:6.0.0'
+
+    implementation("androidx.fragment:fragment-ktx:1.6.0")
+    implementation("androidx.activity:activity-ktx:1.7.2")
+
+    // recycler-view-pager dependency
+    //   implementation 'com.github.prayagdesai:recycler-view-pager:2.1.0'
+
+    implementation files('libs/compass-qibla')
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+
+
+}

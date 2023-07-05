@@ -1,0 +1,39 @@
+<resources>
+        <string name="app_name">Tab Cash</string>
+        <string name="email">E-mail</string>
+        <string name="password">Password</string>
+        <string name="remember_me">Remember me</string>
+        <string name="forget_password">Forget password?</string>
+        <string name="login">Login</string>
+        <string name="not_have_account">Don\'t have an account?  </string>
+        <string name="already_have_acount">Already have an account?</string>
+
+        <string name="sign_up">Sign up</string>
+        <string name="tab_cash">Tab Cash</string>
+        <string name="wellcome_message">Welcome back to Tab cash\n</string>
+        <string name="title_activity_register">RegisterActivity</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string name="kids">Kids</string>
+        <string name="history">History</string>
+        <string name="cards">Cards</string>
+        <string name="home">Home</string>
+        <string name="cash_in">Cash In</string>
+        <string name="cash_out">Cash Out</string>
+        <string name="donations">Donations</string>
+        <string name="resala">Resala</string>
+        <string name="elhelal">El Helal el Ahmer el Masry</string>
+        <string name="sapa_w_phamsen_hospital">57357 Hospital</string>
+        <string name="five_handred_hospital">500 500</string>
+        <string name="address">Address</string>
+        <string name="expiration_date">Expiration date</string>
+        <string name="giza_egypt">Giza, Egypt</string>
+        <string name="name">Name</string>
+        <string name="phone">Phone Number</string>
+        <string name="enter_amount">Enter an amount</string>
+        <string name="send">Send</string>
+        <string name="total_balance">Total Balance</string>
+    <string name="mobile_number">Enter your phone number</string>
+    <string name="city">Enter your city name</string>
+    <string name="neighboorId">Enter neighboorId</string>
+</resources>
