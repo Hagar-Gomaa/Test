@@ -1,6 +1,6 @@
 package com.example.testapp.domain.entities
 
-data class RegisterEntity(
+data class CommonEntity(
     val smsCode: Int,
     val validationMessage: String,
     val errorMessage: String,
