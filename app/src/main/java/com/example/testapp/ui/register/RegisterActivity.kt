@@ -1,30 +1,39 @@
 package com.example.testapp.ui.register
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.example.testapp.R
 import com.example.testapp.databinding.ActivityRegistrBinding
+import com.example.testapp.ui.activate.ActivateAccountActivity
 import com.example.testapp.ui.bases.BaseActivity
+import com.example.testapp.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RegisterActivity : BaseActivity<ActivityRegistrBinding, RegisterUiState, RegisterUiEvent>() {
+class RegisterActivity : BaseActivity<ActivityRegistrBinding, RegisterUiState, CommonUiEvent>() {
     override val layoutActivityId: Int
         get() = R.layout.activity_registr
     override val viewModel: RegisterViewModel by viewModels()
     lateinit var binding: ActivityRegistrBinding
-
-    private val PICK_IMAGE_REQUEST = 1
-    private var imagePath: String = ""
-    override fun onEvent(event: RegisterUiEvent) {
+    override fun onEvent(event: CommonUiEvent) {
         TODO("Not yet implemented")
     }
 
@@ -33,30 +42,42 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, RegisterUiState, R
         binding = DataBindingUtil.setContentView(
             this, layoutActivityId
         )
+
+        binding.viewModel= viewModel
         callBacks()
 
 
     }
 
     private fun callBacks() {
+        val intent = Intent(this, ActivateAccountActivity::class.java)
+         var once=true
         binding.imageLocationTextView.setOnClickListener {
-            Log.e("RegisterActivity", "buttonSignUp clicked")
+            Log.e("RegisterActivity", "SelectImage clicked")
             selectImage()
         }
         binding.buttonSignUp.setOnClickListener {
 
-            Log.e("RegisterActivity", "buttonSignUp clicked")
-            viewModel.state.value.name = binding.editTextName.text.toString()
-            viewModel.state.value.email = binding.editTextIdEmail.text.toString()
-            viewModel.state.value.phone = binding.editTextMobileNumber.text.toString()
-            viewModel.state.value.city = binding.editTextConfirmCity.text.toString()
-            viewModel.state.value.neighborhood_id = binding.editTextNeighboorid.text.toString()
-
-
-
+            Log.e("RegisterActivity", "ButtonSignUp clicked")
             viewModel.register()
+            lifecycleScope.launch {
+                viewModel.state.collectLatest { state ->
+                    if (!viewModel.state.value.apiSuccess.isNullOrEmpty()&&once) {
+                        showNotification(applicationContext)
+                        startActivity(intent)
+                        once=false
+                    }
+                    val apiError = viewModel.state.value.apiError
+                    if (!apiError.isNullOrEmpty() && apiError != "nullnull") {
+                        val snackbar =
+                            Snackbar.make(binding.buttonSignUp, "$apiError", Snackbar.LENGTH_SHORT)
+                        snackbar.show()
+                    }
+                }
+            }
         }
     }
+
 
     fun selectImage() {
         // Request permissions
@@ -75,7 +96,6 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, RegisterUiState, R
 
     }
 
-    // Handle the result
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -92,12 +112,57 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, RegisterUiState, R
 
                 cursor?.close()
 
-                // Save the image path to a variable or database
-                // For example, you can save it to a variable like this:
                 binding.imageLocationTextView.text = imagePath
                 viewModel.state.value.image = imagePath.toString()
             }
         }
+    }
+    fun showNotification(context: Context
+
+    ) {
+        val intent = Intent(this, ActivateAccountActivity::class.java)
+        val channel_id = "notification_channel"
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        // Pass the intent to PendingIntent to start the
+
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE
+        )
+        var builder: NotificationCompat.Builder = NotificationCompat.Builder(
+            context,
+            channel_id
+        )
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("Test App Message")
+            .setContentText("your virfication code ")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setStyle(NotificationCompat.BigTextStyle().bigText("your virfication code is "+viewModel.state.value.smsCode))
+            .setAutoCancel(true)
+            .setVibrate(
+                longArrayOf(
+                    1000, 1000, 1000,
+                    1000, 1000
+                )
+            )
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+
+        val notificationManager = getSystemService(
+            Context.NOTIFICATION_SERVICE) as NotificationManager?
+        if (Build.VERSION.SDK_INT
+            >= Build.VERSION_CODES.O
+        ) {
+            val notificationChannel = NotificationChannel(
+                channel_id, "web_app",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationManager!!.createNotificationChannel(
+                notificationChannel
+            )
+        }
+        notificationManager!!.notify(0, builder.build())
     }
 
 }

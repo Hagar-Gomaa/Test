@@ -6,11 +6,11 @@ import androidx.databinding.DataBindingUtil
 import com.example.testapp.R
 import com.example.testapp.databinding.ActivityMainBinding
 import com.example.testapp.ui.bases.BaseActivity
-import com.example.testapp.ui.register.RegisterUiEvent
+import com.example.testapp.ui.register.CommonUiEvent
 import com.example.testapp.ui.register.RegisterUiState
 import com.example.testapp.ui.register.RegisterViewModel
 
-class MainActivity : BaseActivity<ActivityMainBinding,RegisterUiState,RegisterUiEvent>() {
+class MainActivity : BaseActivity<ActivityMainBinding,RegisterUiState,CommonUiEvent>() {
     override val layoutActivityId: Int
         get() = R.layout.activity_main
 
@@ -24,7 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding,RegisterUiState,RegisterUi
         )
 
 
-    override fun onEvent(event: RegisterUiEvent) {
+    override fun onEvent(event: CommonUiEvent) {
         TODO("Not yet implemented")
     }
 

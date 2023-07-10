@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 
 
-data class Data(
+data class CommonDto(
 
     @field:SerializedName("sms_code")
     val smsCode: Int? = null

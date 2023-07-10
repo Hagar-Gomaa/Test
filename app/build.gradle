@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.test:core-ktx:1.4.0'
     def retrofit = '2.9.0'
     def coroutineVersion = '1.7.1'
 
@@ -66,10 +67,6 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
 
-    // room
-    implementation("androidx.room:room-runtime:2.5.1")
-    kapt("androidx.room:room-compiler:2.5.1")
-    implementation("androidx.room:room-ktx:2.5.1")
 
     /// navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
@@ -91,12 +88,6 @@ dependencies {
 
     implementation("androidx.fragment:fragment-ktx:1.6.0")
     implementation("androidx.activity:activity-ktx:1.7.2")
-
-    // recycler-view-pager dependency
-    //   implementation 'com.github.prayagdesai:recycler-view-pager:2.1.0'
-
-    implementation files('libs/compass-qibla')
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
 
 
 }

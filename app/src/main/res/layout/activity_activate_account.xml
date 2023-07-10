@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+<variable
+    name="activeCodeViewModel"
+    type="com.example.testapp.ui.activate.ActivateAccountViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activate.ActivateAccountActivity">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_mobile_number"
+            style="@style/TextInputLayout"
+            error="@{activeCodeViewModel.phone_email_error}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_32dp"
+            android:layout_marginTop="@dimen/_45dp"
+            android:hint="@string/mobile_number"
+            app:layout_constraintBottom_toTopOf="@id/button_active_code"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_mobile_number"
+                style="@style/TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@={activeCodeViewModel.state.phoneOrEmail}"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_code"
+            style="@style/TextInputLayout"
+            error="@{activeCodeViewModel.smsError}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_32dp"
+            android:layout_marginTop="20dp"
+            android:hint="Enter your active code"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_mobile_number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:padding="16dp"
+                android:text="@={activeCodeViewModel.state.smsCodeString}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_active_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_24dp"
+            android:layout_marginTop="24dp"
+            android:paddingVertical="10dp"
+            android:text="Activate Code"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_code" />
+
+        <TextView
+            android:id="@+id/text_resend_code"
+            style="@style/Remember_Me_Style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="1000dp"
+            android:text="@string/text_resend_code"
+            android:textColor="@color/gray_500"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_active_code"
+            app:layout_constraintVertical_bias="0.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

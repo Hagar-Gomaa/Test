@@ -33,7 +33,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_name"
             style="@style/TextInputLayout"
-
+            error="@{viewModel.nameError}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_32dp"
@@ -56,6 +56,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_mobile_number"
             style="@style/TextInputLayout"
+            error="@{viewModel.phoneError}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_32dp"
@@ -80,6 +81,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_email_register"
             style="@style/TextInputLayout"
+            error="@{viewModel.emailError}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_32dp"
@@ -101,6 +103,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_confirm_city"
             style="@style/TextInputLayout"
+            error="@{viewModel.cityIdError}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_32dp"
@@ -116,13 +119,15 @@
                 style="@style/TextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={viewModel.state.city}" />
+                android:text="@={viewModel.state.cityId}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_neighboorId"
             style="@style/TextInputLayout"
+            error="@{viewModel.neighborhoodIdError}"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_32dp"
@@ -138,7 +143,7 @@
                 style="@style/TextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={viewModel.state.neighborhood_id}" />
+                android:text="@={viewModel.state.neighborhoodId}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -152,7 +157,7 @@
             android:text="@string/sign_up"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_location_text_view" />
+            app:layout_constraintTop_toBottomOf="@id/image_error" />
 
         <TextView
             android:id="@+id/text_already_have_account"
@@ -205,6 +210,16 @@
             android:layout_margin="@dimen/_24dp"
             android:text="select Image location "
             app:layout_constraintTop_toBottomOf="@+id/input_layout_confirm_city"
+            tools:layout_editor_absoluteX="25dp" />
+
+        <TextView
+            android:id="@+id/image_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_24dp"
+            android:textColor="@color/red"
+            android:text="@{viewModel.imageError}"
+            app:layout_constraintTop_toBottomOf="@+id/image_location_text_view"
             tools:layout_editor_absoluteX="25dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

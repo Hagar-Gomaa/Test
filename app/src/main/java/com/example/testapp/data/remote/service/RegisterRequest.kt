@@ -1,14 +1,17 @@
 package com.example.testapp.data.remote.service
 
+import okhttp3.MultipartBody
+import retrofit2.http.Multipart
+
 data class RegisterRequest(
     val name: String="",
     val email: String="",
     val phone: String="",
-    val image: String="",
-    val country_code: String="",
-    val neighborhood_id: String="",
-    val city_id:String="",
-    val device_id:String="",
-    val device_name: String="",
-    val device_type: Int=1,
+    val image: MultipartBody.Part?=null,
+    val countryCode: String="",
+    val neighborhoodId: String="",
+    val cityId:String="",
+    val deviceId:String="",
+    val deviceName: String="",
+    val deviceType: Int=1,
 )

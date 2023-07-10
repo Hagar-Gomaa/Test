@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/notification_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_background" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <TextView
+            android:id="@+id/notification_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notification Title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/notification_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notification Text" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/notification_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+</LinearLayout>
