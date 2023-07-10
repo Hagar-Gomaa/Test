@@ -1,6 +1,6 @@
 package com.example.testapp.ui.register
 
-data class RegisterUiState (
+data class CommonUiState (
     var isLoading: Boolean = true,
     var apiError: String="",
     var apiSuccess: String="",
