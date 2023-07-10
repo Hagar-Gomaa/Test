@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.testapp.R
@@ -36,39 +38,51 @@ class LoginActivity :
         )
         binding.viewModel = viewModel
         checkResult()
-
+        callBacks()
     }
 
     private fun checkResult() {
-
-            Log.e("LoginActivity", "buttonLogin clicked")
-            val intent = Intent(this, MainActivity::class.java)
-            var once = true
-            lifecycleScope.launch {
-                viewModel.state.collectLatest {
-                    isErrors()
-                    if (viewModel.state.value.apiSuccess.isNotEmpty() && once) {
-                        startActivity(intent)
-                        once = false
-                    }
-
+        Log.e("LoginActivity", "buttonLogin clicked")
+        val intent = Intent(this, MainActivity::class.java)
+        var once = true
+        lifecycleScope.launch {
+            viewModel.state.collectLatest {
+                isErrors()
+                if (viewModel.state.value.apiSuccess.isNotEmpty() && once) {
+                    startActivity(intent)
+                    once = false
                 }
+                val error = viewModel.state.value.isError
+                val loading =viewModel.state.value.isLoading
+                binding.progress.isVisible = viewModel.state.value.isLoading
 
+                Log.e("error", error.toString())
+                Log.e("loading", loading.toString())
 
-
+            }
         }
     }
 
     private fun isErrors(): Boolean {
         val apiError = viewModel.state.value.apiError
         return if ((apiError.isNotEmpty() && apiError != "nullnull")) {
+            binding.layoutError.isVisible = true
+            binding.layoutCotnet.isVisible = false
             val snackbar =
                 Snackbar.make(binding.buttonLogin, apiError, Snackbar.LENGTH_SHORT)
             snackbar.show()
-            viewModel.refreshState()
             true
         } else {
             false
         }
+    }
+
+    fun callBacks() {
+        binding.buttonRetry.setOnClickListener {
+            binding.layoutCotnet.isVisible = true
+            binding.layoutError.isVisible = false
+
+        }
+        binding.progress.isVisible = viewModel.state.value.isLoading
     }
 }

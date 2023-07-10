@@ -97,5 +97,5 @@ implementation("com.karumi:dexter:6.2.1")
     // Support library for compatibility with older versions of Android
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
-
+   implementation("androidx.core:core-splashscreen:1.0.1")
 }

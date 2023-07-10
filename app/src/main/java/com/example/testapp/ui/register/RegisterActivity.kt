@@ -15,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.testapp.R
@@ -49,6 +50,8 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
     }
 
     private fun callBacks() {
+        val apiError = viewModel.state.value.apiError
+        val snackbar = Snackbar.make(binding.buttonSignUp, apiError, Snackbar.LENGTH_SHORT)
         val intent = Intent(this, ActivateAccountActivity::class.java)
          var once=true
         binding.imageLocationTextView.setOnClickListener {
@@ -60,25 +63,34 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             Log.e("RegisterActivity", "ButtonSignUp clicked")
             viewModel.register()
             lifecycleScope.launch {
-                viewModel.state.collectLatest { state ->
-                    if (!viewModel.state.value.apiSuccess.isNullOrEmpty()&&once) {
+                viewModel.state.collectLatest {
+                    binding.progress.isVisible = viewModel.state.value.isLoading
+                    if (viewModel.state.value.apiSuccess.isNotEmpty() &&once) {
                         showNotification(applicationContext)
                         startActivity(intent)
                         once=false
                     }
-                    val apiError = viewModel.state.value.apiError
-                    if (!apiError.isNullOrEmpty() && apiError != "nullnull") {
-                        val snackbar =
-                            Snackbar.make(binding.buttonSignUp, "$apiError", Snackbar.LENGTH_SHORT)
+                    if (apiError.isNotEmpty() && apiError != "nullnull") {
+                        binding.layoutError.isVisible = true
+                        binding.layoutCotnet.isVisible = false
                         snackbar.show()
                     }
                 }
             }
         }
+
+        binding.buttonRetry.setOnClickListener {
+            binding.layoutCotnet.isVisible = true
+            binding.layoutError.isVisible = false
+            viewModel.refreshState()
+
+        }
+
     }
 
 
-    fun selectImage() {
+    private val PICK_IMAGE_REQUEST = 1
+    private fun selectImage() {
         // Request permissions
         val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
         if (ContextCompat.checkSelfPermission(
@@ -86,9 +98,8 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
                 readPermission
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(this, arrayOf(readPermission), 1)
+            ActivityCompat.requestPermissions(this, arrayOf(readPermission), PICK_IMAGE_REQUEST)
         }
-
         // Launch the image picker
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 2)
@@ -116,7 +127,7 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             }
         }
     }
-    fun showNotification(context: Context
+    private fun showNotification(context: Context
 
     ) {
         val intent = Intent(this, ActivateAccountActivity::class.java)
@@ -137,7 +148,10 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             .setContentTitle("Test App Message")
             .setContentText("your virfication code ")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setStyle(NotificationCompat.BigTextStyle().bigText("your virfication code is "+viewModel.state.value.smsCode))
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("your virfication code is " + viewModel.state.value.smsCode)
+            )
             .setAutoCancel(true)
             .setVibrate(
                 longArrayOf(
@@ -149,7 +163,8 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             .setContentIntent(pendingIntent)
 
         val notificationManager = getSystemService(
-            Context.NOTIFICATION_SERVICE) as NotificationManager?
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager?
         if (Build.VERSION.SDK_INT
             >= Build.VERSION_CODES.O
         ) {
@@ -163,6 +178,7 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
         }
         notificationManager!!.notify(0, builder.build())
     }
+
 
 }
 

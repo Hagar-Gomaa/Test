@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -55,8 +55,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, CommonUiState, CommonUiEv
         )
 
         window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
+            FLAG_FULLSCREEN,
+            FLAG_FULLSCREEN
         )
 
         supportMapFragment =
@@ -130,7 +130,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, CommonUiState, CommonUiEv
                 intent.data = uri
                 startActivity(intent)
             }
-            .setNegativeButton("Cancel") { dialog: DialogInterface, which: Int ->
+            .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
             }
             .show()

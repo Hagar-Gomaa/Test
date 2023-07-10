@@ -1,7 +1,7 @@
 package com.example.testapp.ui.activate
 
 data class ActivateUiState (
-    var isLoading: Boolean = true,
+    var isLoading: Boolean = false,
     var apiError: String="",
     var apiSuccess: String="",
     var phoneOrEmail: String="",

@@ -55,5 +55,26 @@
         <item name="android:background">@color/purple_500</item>
     </style>
 
+<!--    <style name="Theme.App.Starting" parent="Theme.SplashScreen">-->
+<!--        &lt;!&ndash; Set the splash screen background, animated icon, and animation duration. &ndash;&gt;-->
+<!--        <item name="windowSplashScreenBackground">@color/white</item>-->
+<!--        &lt;!&ndash; Use windowSplashScreenAnimatedIcon to add either a drawable or an-->
+<!--             animated drawable. One of these is required. &ndash;&gt;-->
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/animate_splash</item>-->
+<!--        &lt;!&ndash; Required for animated icons &ndash;&gt;-->
+<!--        <item name="windowSplashScreenAnimationDuration">200</item>-->
 
-    </resources>
+<!--        &lt;!&ndash; Set the theme of the Activity that directly follows your splash screen. &ndash;&gt;-->
+<!--        &lt;!&ndash; Required &ndash;&gt;-->
+<!--        <item name="postSplashScreenTheme">@style/Theme.TestApp</item>-->
+<!--    </style>-->
+
+<!--    <style name="SplashScreenTheme" parent="Theme.SplashScreen">-->
+<!--        <item name="windowSplashScreenBackground">@color/white</item>-->
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/googleg_standard_color_18</item>-->
+<!--        <item name="windowSplashScreenAnimationDuration">5000</item>-->
+<!--    </style>-->
+<!--    <style name="Theme.MovieApp" parent="Base.Theme.MovieApp" />-->
+
+
+</resources>

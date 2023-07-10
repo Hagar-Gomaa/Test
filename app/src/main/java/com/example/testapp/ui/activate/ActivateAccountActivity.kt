@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.app.NotificationCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.testapp.R
@@ -19,7 +20,10 @@ import com.example.testapp.ui.login.LoginActivity
 import com.example.testapp.ui.register.CommonUiEvent
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -43,30 +47,39 @@ class ActivateAccountActivity :
 
     }
 
+private var job:Job?=null
     private fun callBacks() {
 
         binding.buttonActiveCode.setOnClickListener {
             Log.e("ActivateAccountActivity", "buttonActiveCode clicked")
+
+            viewModel.state.value.smsCodeString =binding.editTextCode.text.toString()
+            val sms = viewModel.state.value.smsCodeString
+            Log.e("ActivateAccountActivity", sms.toString())
+
             viewModel.activateAccount()
             val intent = Intent(this, LoginActivity::class.java)
             var once = true
-            lifecycleScope.launch {
-                viewModel.state.collectLatest {
-                    isErrors()
-                    if (!viewModel.state.value.apiSuccess.isNullOrEmpty()&&once) {
-                            startActivity(intent)
-                            once = false
-                        }
-                    
-                }
+    job = lifecycleScope.launch {
+        viewModel.state.collectLatest {
+            binding.progress.isVisible = viewModel.state.value.isLoading
+            viewModel.state.value.smsCodeString
+            isErrors()
+            if (!viewModel.state.value.apiSuccess.isNullOrEmpty() && once) {
+                startActivity(intent)
+                once = false
             }
+
+        }
+    }
         }
         binding.textResendCode.setOnClickListener {
             Log.e("ActivateAccountActivity", "textResendCode clicked")
+           if (job!!.isActive)job!!.cancel()
             viewModel.resendActiveCode()
-
             lifecycleScope.launch {
                 viewModel.state.collectLatest {
+                    binding.progress.isVisible = viewModel.state.value.isLoading
                     if (!isErrors()) {
                         val smsCode = viewModel.state.value.smsCode
                         Log.e("sms", smsCode.toString())
@@ -80,22 +93,31 @@ class ActivateAccountActivity :
             }
 
         }
+        binding.buttonRetry.setOnClickListener {
+            binding.layoutCotnet.isVisible = true
+            binding.layoutError.isVisible = false
+            viewModel.refreshState(0)
+
+        }
+
     }
 
     private fun isErrors(): Boolean {
         val apiError = viewModel.state.value.apiError
         return if ((!apiError.isNullOrEmpty() && apiError != "nullnull")) {
+            binding.layoutError.isVisible = true
+            binding.layoutCotnet.isVisible = false
             val snackbar =
                 Snackbar.make(binding.buttonActiveCode, apiError, Snackbar.LENGTH_SHORT)
             snackbar.show()
-            viewModel.refreshState()
+            viewModel.refreshState(0)
             true
         } else {
             false
         }
     }
 
-    fun showNotification(
+    private fun showNotification(
         context: Context
 
     ) {

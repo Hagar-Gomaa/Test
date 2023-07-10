@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator android:duration="1000"
+    android:propertyName="rotation"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <propertyValuesHolder
+        android:propertyName="rotation"
+        android:valueTo="360"
+        android:valueType="floatType" />
+
+</objectAnimator>

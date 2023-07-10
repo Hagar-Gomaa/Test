@@ -35,8 +35,6 @@ class LoginViewModel @Inject constructor(
 
     @SuppressLint("HardwareIds")
     fun login() {
-        Log.e("viewModel111", "ddddddddd")
-
         var deviceType by Delegates.notNull<Int>()
         var deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
 
@@ -58,6 +56,8 @@ class LoginViewModel @Inject constructor(
         Log.e("deviceId+deviceType", deviceId + deviceType)
         val phoneOrEmail = state.value.phoneOrEmail
         if (isValidPhoneOrEmail(phoneOrEmail)) {
+            refreshState()
+            state.value.isLoading = true
             tryToExecute(
                 call = { loginUseCase(phoneOrEmail, deviceType, deviceId) },
                 ::onSuccessLogin, mapperFromDomain, ::onErrorLogin
@@ -74,11 +74,14 @@ class LoginViewModel @Inject constructor(
             )
 
         }
+
     }
 
     private fun onErrorLogin(e: Throwable) {
         _state.update {
-            it.copy(apiError = e.message.toString())
+            it.copy(
+                isLoading = false,
+                apiError = e.message.toString())
         }
         Log.e("error", e.toString())
 
@@ -103,7 +106,7 @@ class LoginViewModel @Inject constructor(
     fun refreshState() {
         _state.update {
             it.copy(
-                isLoading = true,
+                isLoading = false,
                 apiSuccess = "",
                 apiError = "",
             )

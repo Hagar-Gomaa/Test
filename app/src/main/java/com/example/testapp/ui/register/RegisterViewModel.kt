@@ -2,6 +2,7 @@ package com.example.testapp.ui.register
 
 import android.content.ContentResolver
 import android.os.Build
+import android.provider.Settings
 import android.provider.Settings.Secure
 import android.util.Log
 import androidx.core.net.toUri
@@ -20,6 +21,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 
 @HiltViewModel
@@ -40,19 +42,33 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch { state.collectLatest { it.log() } }
     }
 
-
     fun register() {
         if (isValidInput()) {
+            refreshState()
+            state.value.isLoading = true
             val name = state.value.name
             val email = state.value.email
             val phone = state.value.phoneOrEmail
             val countryCode = state.value.cityId
-            val deviceType = Build.DEVICE
             val deviceId = Secure.getString(contentResolver, Secure.ANDROID_ID)
             val cityId = state.value.cityId
             val neighborhoodId = state.value.neighborhoodId
             val deviceName = Build.MODEL
+            var deviceType by Delegates.notNull<Int>()
+            when (System.getProperty("os.name")) {
+                "android.os" -> {
+                    deviceType = 1
+                }
 
+                "iOS" -> {
+                    deviceType = 2
+                }
+
+                else -> {
+                    deviceType = 1
+
+                }
+            }
             val imageUri = state.value.image.toUri()
             val imagePart = if (imageUri != null) {
                 val file = File(imageUri.path!!)
@@ -61,7 +77,6 @@ class RegisterViewModel @Inject constructor(
             } else {
                 null
             }
-
             val request = RegisterRequest(
                 name = name,
                 email = email,
@@ -96,11 +111,25 @@ class RegisterViewModel @Inject constructor(
 
     private fun onErrorRegister(e: Throwable) {
         _state.update {
-            it.copy(apiError = e.message.toString())
+            it.copy(
+                isLoading = false,
+                apiError = e.message.toString()
+            )
         }
         Log.e("error", e.toString())
 
     }
+
+    fun refreshState() {
+        _state.update {
+            it.copy(
+                isLoading = false,
+                apiSuccess = "",
+                apiError = "",
+            )
+        }
+    }
+
 
     private fun isValidInput(): Boolean {
         val name = state.value.name
@@ -162,6 +191,7 @@ class RegisterViewModel @Inject constructor(
         }
         return isValid
     }
+
 
     fun Any.log() {
         Log.e("TAGTAG", "log(${this::class.java.simpleName}) : $this")

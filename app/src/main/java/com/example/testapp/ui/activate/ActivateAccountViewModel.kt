@@ -31,13 +31,14 @@ class ActivateAccountViewModel @Inject constructor(
 
     fun activateAccount() {
         if (isValidInput()) {
-            val smsCode=state.value.smsCodeString
-            if (smsCode=="") state.value.smsCodeString="0"
+            val smsCode = state.value.smsCodeString
+            refreshState(smsCode.toInt())
+            state.value.isLoading = true
+            if (smsCode == "") state.value.smsCodeString = "0"
 
             val activateRequest = ActivateRequest(
                 smsCode = state.value.smsCodeString.toInt(), state.value.phoneOrEmail
             )
-
             tryToExecute(
                 call = { activateAccountUseCase(activateRequest) },
                 ::onSuccessActivate, mapperFromDomain, ::onErrorActivate
@@ -60,7 +61,10 @@ class ActivateAccountViewModel @Inject constructor(
 
     private fun onErrorActivate(e: Throwable) {
         _state.update {
-            it.copy(apiError = e.message.toString())
+            it.copy(
+                isLoading = false,
+                apiError = e.message.toString()
+            )
         }
         Log.e("error", e.toString())
 
@@ -68,7 +72,8 @@ class ActivateAccountViewModel @Inject constructor(
 
     fun resendActiveCode() {
         if (isValidPhoneOrEmail(state.value.phoneOrEmail)) {
-
+            refreshState(0)
+            state.value.isLoading = true
             tryToExecute(
                 call = { resendCodeUseCase(state.value.phoneOrEmail) },
                 ::onSuccessResendActiveCode, mapperFromDomain, ::onErrorResendActiveCode
@@ -79,7 +84,6 @@ class ActivateAccountViewModel @Inject constructor(
 
 
     private fun onSuccessResendActiveCode(activeUiState: ActivateUiState) {
-
         val newState = state.value.copy(
             isLoading = false,
             smsCode = activeUiState.smsCodeString.toInt(),
@@ -87,12 +91,15 @@ class ActivateAccountViewModel @Inject constructor(
             apiSuccess = activeUiState.apiSuccess
         )
         _state.value = newState
-        Log.e("smsCode",activeUiState.smsCodeString)
+        Log.e("smsCode", activeUiState.smsCodeString)
     }
 
     private fun onErrorResendActiveCode(e: Throwable) {
         _state.update {
-            it.copy(apiError = e.message.toString())
+            it.copy(
+                isLoading = false,
+                apiError = e.message.toString()
+            )
         }
         Log.e("error", e.toString())
 
@@ -112,10 +119,7 @@ class ActivateAccountViewModel @Inject constructor(
             smsError.set(null)
         }
 
-        if (isValidPhoneOrEmail(phoneOrEmail)) isValid = true
-        else {
-            isValid = false
-        }
+        isValid = isValidPhoneOrEmail(phoneOrEmail)
 
         return isValid
     }
@@ -134,17 +138,18 @@ class ActivateAccountViewModel @Inject constructor(
         return isValid1
     }
 
-     fun refreshState() {
+    fun refreshState(smsCode:Int) {
         _state.update {
             it.copy(
-                isLoading = true,
+                isLoading = false,
                 apiSuccess = "",
                 apiError = "",
-                smsCodeString = "",
-                smsCode = 0
+                smsCodeString = smsCode.toString(),
+                smsCode = smsCode
             )
         }
     }
+
     fun Any.log() {
         Log.e("TAGTAG", "log(${this::class.java.simpleName}) : $this")
     }

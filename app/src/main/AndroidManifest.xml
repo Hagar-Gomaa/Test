@@ -21,6 +21,9 @@
         android:theme="@style/Theme.TestApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="false" />
 
@@ -29,16 +32,18 @@
             android:value="AIzaSyCwZYumzEGAowlXy8tywFxi35arK5HXPMw" />
 
         <activity
-            android:name=".ui.activate.ActivateAccountActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="true">
+            android:name=".ui.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activate.ActivateAccountActivity"
+            android:exported="true"
+          >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
