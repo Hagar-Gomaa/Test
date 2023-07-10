@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.testapp.domain.usecase.LoginUseCase
 import com.example.testapp.ui.bases.BaseViewModel
 import com.example.testapp.ui.mapper.UiCommonMapperFromDomain
+import com.example.testapp.ui.register.CommonListener
 import com.example.testapp.ui.register.CommonUiEvent
 import com.example.testapp.ui.register.CommonUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,7 @@ class LoginViewModel @Inject constructor(
     private val contentResolver: ContentResolver,
     private val mapperFromDomain: UiCommonMapperFromDomain,
     private val loginUseCase: LoginUseCase,
-) : BaseViewModel<CommonUiState, CommonUiEvent>(CommonUiState()) {
+) : BaseViewModel<CommonUiState, CommonUiEvent>(CommonUiState()),CommonListener {
 
     var phone_email_error = ObservableField<String?>()
 
@@ -57,7 +58,6 @@ class LoginViewModel @Inject constructor(
         val phoneOrEmail = state.value.phoneOrEmail
         if (isValidPhoneOrEmail(phoneOrEmail)) {
             refreshState()
-            state.value.isLoading = true
             tryToExecute(
                 call = { loginUseCase(phoneOrEmail, deviceType, deviceId) },
                 ::onSuccessLogin, mapperFromDomain, ::onErrorLogin
@@ -106,7 +106,7 @@ class LoginViewModel @Inject constructor(
     fun refreshState() {
         _state.update {
             it.copy(
-                isLoading = false,
+                isLoading = true,
                 apiSuccess = "",
                 apiError = "",
             )
@@ -115,6 +115,10 @@ class LoginViewModel @Inject constructor(
 
     private fun Any.log() {
         Log.e("TAGTAG", "log(${this::class.java.simpleName}) : $this")
+    }
+
+    override fun go() {
+        sendEvent(CommonUiEvent.Go)
     }
 
 }

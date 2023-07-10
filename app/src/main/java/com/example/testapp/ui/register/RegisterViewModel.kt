@@ -1,5 +1,6 @@
 package com.example.testapp.ui.register
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.os.Build
 import android.provider.Settings
@@ -29,7 +30,7 @@ class RegisterViewModel @Inject constructor(
     private val contentResolver: ContentResolver,
     private val mapperFromDomain: UiCommonMapperFromDomain,
     private val registerAccountUseCase: RegisterAccountUseCase
-) : BaseViewModel<CommonUiState, CommonUiEvent>(CommonUiState()) {
+) : BaseViewModel<CommonUiState, CommonUiEvent>(CommonUiState()) ,CommonListener{
     var nameError = ObservableField<String?>()
     var emailError = ObservableField<String?>()
     var phoneError = ObservableField<String?>()
@@ -42,6 +43,7 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch { state.collectLatest { it.log() } }
     }
 
+    @SuppressLint("HardwareIds")
     fun register() {
         if (isValidInput()) {
             refreshState()
@@ -70,12 +72,10 @@ class RegisterViewModel @Inject constructor(
                 }
             }
             val imageUri = state.value.image.toUri()
-            val imagePart = if (imageUri != null) {
+            val imagePart = run {
                 val file = File(imageUri.path!!)
                 val requestFile = file.asRequestBody("image/*".toMediaType())
                 MultipartBody.Part.createFormData("image", file.name, requestFile)
-            } else {
-                null
             }
             val request = RegisterRequest(
                 name = name,
@@ -83,7 +83,6 @@ class RegisterViewModel @Inject constructor(
                 phone = phone,
                 countryCode = countryCode,
                 cityId = cityId,
-
                 deviceId = deviceId,
                 neighborhoodId = neighborhoodId,
                 deviceName = deviceName,
@@ -195,5 +194,9 @@ class RegisterViewModel @Inject constructor(
 
     fun Any.log() {
         Log.e("TAGTAG", "log(${this::class.java.simpleName}) : $this")
+    }
+
+    override fun go() {
+        sendEvent(CommonUiEvent.Go)
     }
 }

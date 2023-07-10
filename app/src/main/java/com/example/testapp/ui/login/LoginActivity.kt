@@ -15,6 +15,7 @@ import com.example.testapp.ui.bases.BaseActivity
 import com.example.testapp.ui.main.MainActivity
 import com.example.testapp.ui.register.CommonUiEvent
 import com.example.testapp.ui.register.CommonUiState
+import com.example.testapp.ui.register.RegisterActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +29,12 @@ class LoginActivity :
     override val viewModel: LoginViewModel by viewModels()
     private lateinit var binding: ActivityLoginBinding
     override fun onEvent(event: CommonUiEvent) {
-        TODO("Not yet implemented")
+        when (event) {
+            is CommonUiEvent.Go -> {
+                val intent = Intent(this, RegisterActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,13 +54,13 @@ class LoginActivity :
         lifecycleScope.launch {
             viewModel.state.collectLatest {
                 isErrors()
+                val error = viewModel.state.value.isError
+                val loading = viewModel.state.value.isLoading
+                binding.progress.isVisible = viewModel.state.value.isLoading
                 if (viewModel.state.value.apiSuccess.isNotEmpty() && once) {
                     startActivity(intent)
                     once = false
                 }
-                val error = viewModel.state.value.isError
-                val loading =viewModel.state.value.isLoading
-                binding.progress.isVisible = viewModel.state.value.isLoading
 
                 Log.e("error", error.toString())
                 Log.e("loading", loading.toString())
@@ -84,5 +90,10 @@ class LoginActivity :
 
         }
         binding.progress.isVisible = viewModel.state.value.isLoading
+        binding.textSignUp.setOnClickListener {
+            viewModel.go()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

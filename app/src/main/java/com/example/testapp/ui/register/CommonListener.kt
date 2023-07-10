@@ -1,6 +1,6 @@
 package com.example.testapp.ui.register
 
 
-interface RegisterListener {
+interface CommonListener {
     fun go()
 }

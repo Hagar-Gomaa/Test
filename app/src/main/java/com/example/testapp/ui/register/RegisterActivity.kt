@@ -22,6 +22,7 @@ import com.example.testapp.R
 import com.example.testapp.databinding.ActivityRegistrBinding
 import com.example.testapp.ui.activate.ActivateAccountActivity
 import com.example.testapp.ui.bases.BaseActivity
+import com.example.testapp.ui.login.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,8 +35,12 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
     override val viewModel: RegisterViewModel by viewModels()
     lateinit var binding: ActivityRegistrBinding
     override fun onEvent(event: CommonUiEvent) {
-        TODO("Not yet implemented")
-    }
+        when (event) {
+            is CommonUiEvent.Go -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+        }    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +55,6 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
     }
 
     private fun callBacks() {
-        val apiError = viewModel.state.value.apiError
-        val snackbar = Snackbar.make(binding.buttonSignUp, apiError, Snackbar.LENGTH_SHORT)
         val intent = Intent(this, ActivateAccountActivity::class.java)
          var once=true
         binding.imageLocationTextView.setOnClickListener {
@@ -63,16 +66,20 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             Log.e("RegisterActivity", "ButtonSignUp clicked")
             viewModel.register()
             lifecycleScope.launch {
-                viewModel.state.collectLatest {
+                viewModel.state.collectLatest { state ->
                     binding.progress.isVisible = viewModel.state.value.isLoading
-                    if (viewModel.state.value.apiSuccess.isNotEmpty() &&once) {
+
+                    if (!viewModel.state.value.apiSuccess.isNullOrEmpty()&&once) {
                         showNotification(applicationContext)
                         startActivity(intent)
                         once=false
                     }
+                    val apiError = viewModel.state.value.apiError
                     if (apiError.isNotEmpty() && apiError != "nullnull") {
                         binding.layoutError.isVisible = true
                         binding.layoutCotnet.isVisible = false
+                        val snackbar =
+                            Snackbar.make(binding.buttonSignUp, apiError, Snackbar.LENGTH_SHORT)
                         snackbar.show()
                     }
                 }
@@ -85,7 +92,11 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             viewModel.refreshState()
 
         }
-
+        binding.login.setOnClickListener {
+            viewModel.go()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 
@@ -100,6 +111,7 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
         ) {
             ActivityCompat.requestPermissions(this, arrayOf(readPermission), PICK_IMAGE_REQUEST)
         }
+
         // Launch the image picker
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 2)
@@ -127,7 +139,7 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
             }
         }
     }
-    private fun showNotification(context: Context
+    fun showNotification(context: Context
 
     ) {
         val intent = Intent(this, ActivateAccountActivity::class.java)
