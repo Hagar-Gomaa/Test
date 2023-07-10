@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.testapp.data.remote.service.RegisterRequest
 import com.example.testapp.domain.usecase.RegisterAccountUseCase
 import com.example.testapp.ui.bases.BaseViewModel
-import com.example.testapp.ui.mapper.UiRegisterMapperFromDomain
+import com.example.testapp.ui.mapper.UiCommonMapperFromDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -25,9 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val contentResolver: ContentResolver,
-    private val mapperFromDomain: UiRegisterMapperFromDomain,
+    private val mapperFromDomain: UiCommonMapperFromDomain,
     private val registerAccountUseCase: RegisterAccountUseCase
-) : BaseViewModel<RegisterUiState, CommonUiEvent>(RegisterUiState()) {
+) : BaseViewModel<CommonUiState, CommonUiEvent>(CommonUiState()) {
     var nameError = ObservableField<String?>()
     var emailError = ObservableField<String?>()
     var phoneError = ObservableField<String?>()
@@ -45,7 +45,7 @@ class RegisterViewModel @Inject constructor(
         if (isValidInput()) {
             val name = state.value.name
             val email = state.value.email
-            val phone = state.value.phone
+            val phone = state.value.phoneOrEmail
             val countryCode = state.value.cityId
             val deviceType = Build.DEVICE
             val deviceId = Secure.getString(contentResolver, Secure.ANDROID_ID)
@@ -82,13 +82,13 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun onSuccessRegister(registerUiState: RegisterUiState) {
+    private fun onSuccessRegister(commonUiState: CommonUiState) {
         _state.update {
             it.copy(
                 isLoading = false,
-                smsCode = registerUiState.smsCode, name = state.value.name,
-                apiError = registerUiState.apiError,
-                apiSuccess = registerUiState.apiSuccess
+                smsCode = commonUiState.smsCode, name = state.value.name,
+                apiError = commonUiState.apiError,
+                apiSuccess = commonUiState.apiSuccess
             )
 
         }
@@ -105,7 +105,7 @@ class RegisterViewModel @Inject constructor(
     private fun isValidInput(): Boolean {
         val name = state.value.name
         val email = state.value.email
-        val phone = state.value.phone
+        val phone = state.value.phoneOrEmail
         val city = state.value.cityId
         val neighborhoodId = state.value.neighborhoodId
         val imageUri = state.value.image.toUri()

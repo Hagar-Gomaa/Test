@@ -21,14 +21,13 @@ import com.example.testapp.R
 import com.example.testapp.databinding.ActivityRegistrBinding
 import com.example.testapp.ui.activate.ActivateAccountActivity
 import com.example.testapp.ui.bases.BaseActivity
-import com.example.testapp.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RegisterActivity : BaseActivity<ActivityRegistrBinding, RegisterUiState, CommonUiEvent>() {
+class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, CommonUiEvent>() {
     override val layoutActivityId: Int
         get() = R.layout.activity_registr
     override val viewModel: RegisterViewModel by viewModels()

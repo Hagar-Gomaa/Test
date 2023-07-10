@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_32dp"
             android:layout_marginTop="@dimen/_45dp"
-            android:hint="@string/mobile_number"
+            android:hint="@string/phoneOrEmial"
             app:layout_constraintBottom_toTopOf="@id/button_active_code"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

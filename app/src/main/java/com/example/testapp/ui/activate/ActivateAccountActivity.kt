@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.testapp.R
 import com.example.testapp.databinding.ActivityActivateAccountBinding
 import com.example.testapp.ui.bases.BaseActivity
-import com.example.testapp.ui.main.MainActivity
+import com.example.testapp.ui.login.LoginActivity
 import com.example.testapp.ui.register.CommonUiEvent
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,10 +48,10 @@ class ActivateAccountActivity :
         binding.buttonActiveCode.setOnClickListener {
             Log.e("ActivateAccountActivity", "buttonActiveCode clicked")
             viewModel.activateAccount()
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             var once = true
             lifecycleScope.launch {
-                viewModel.state.collectLatest { state ->
+                viewModel.state.collectLatest {
                     isErrors()
                     if (!viewModel.state.value.apiSuccess.isNullOrEmpty()&&once) {
                             startActivity(intent)

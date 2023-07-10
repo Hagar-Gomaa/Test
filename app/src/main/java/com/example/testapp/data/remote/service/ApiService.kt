@@ -40,8 +40,8 @@ interface ApiService {
     @FormUrlEncoded
     suspend fun login(
         @Field("phone") phoneOrEmail: String,
-        @Field("device_type") deviceType: String,
-        @Field("device_id") deviceId: Int
+        @Field("device_type") deviceType: Int,
+        @Field("device_id") deviceId: String
     ): Response<BaseResponse<CommonDto>>
 
 

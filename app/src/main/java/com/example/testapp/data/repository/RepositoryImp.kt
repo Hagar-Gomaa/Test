@@ -43,8 +43,8 @@ class RepositoryImp @Inject constructor(
 
     override suspend fun login(
         phoneOrEmail: String,
-        deviceType: String,
-        deviceId: Int
+        deviceType:Int ,
+        deviceId: String
     ): CommonEntity{
         return domainCommonMapperFromDto.map(wrapApiCall { apiService.login(phoneOrEmail,deviceType,deviceId) })
     }

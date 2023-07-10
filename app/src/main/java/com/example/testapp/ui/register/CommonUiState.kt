@@ -6,7 +6,7 @@ data class CommonUiState (
     var apiSuccess: String="",
     var name :String="",
     var email: String="",
-    var phone: String="",
+    var phoneOrEmail: String="",
     var smsCode:Int=0,
     var cityId: String="",
     var image: String="",

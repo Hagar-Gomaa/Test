@@ -19,8 +19,8 @@ interface Repository {
 
     suspend fun login(
         phoneOrEmail: String,
-        deviceType: String,
-        deviceId: Int
+        deviceType:Int ,
+        deviceId: String
     ): CommonEntity
 
 }

@@ -10,8 +10,8 @@ class LoginUseCase @Inject constructor(
 
     suspend operator fun invoke(
         phoneOrEmail: String,
-        deviceType: String,
-        deviceId: Int
+        deviceType:Int ,
+        deviceId: String
     ): CommonEntity {
         return repository.login(phoneOrEmail, deviceType, deviceId)
     }
