@@ -81,8 +81,7 @@ class RegisterActivity : BaseActivity<ActivityRegistrBinding, CommonUiState, Com
                         val snackbar =
                             Snackbar.make(binding.buttonSignUp, apiError, Snackbar.LENGTH_SHORT)
                         snackbar.show()
-                    }
-                }
+                    } }
             }
         }
 
